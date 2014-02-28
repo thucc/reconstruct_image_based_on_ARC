@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.5	//
+Move_H	Move_H.m	/^function [ H_move ] = Move_H( H, i, j)$/;"	f
+Move_H_super_mode	Move_H_super_mode.m	/^function H_move = Move_H_super_mode( H, i, j )$/;"	f
+get_F	apply to restoration/get_F.m	/^function F = get_F(freq_bound,N)$/;"	f
+get_F	get_F.m	/^function F = get_F(freq_bound,N)$/;"	f
+get_MTF	apply to restoration/get_MTF.m	/^function [H] = get_MTF( beta_1, beta_2, theta, d, c, alpha, freq_bound, N)$/;"	f
+get_MTF	get_MTF.m	/^function [H] = get_MTF( beta_1, beta_2, theta, d, c, alpha, freq_bound, N)$/;"	f
+get_alias	get_alias.m	/^function alias = get_alias( HF,i_shift,j_shift )$/;"	f
+get_alias_super_mode	get_alias_super_mode.m	/^function [ alias ] = get_alias_super_mode( HF )$/;"	f
+plot_spectrum	apply to restoration/plot_spectrum.m	/^function plot_spectrum(image_fft,description)$/;"	f
