@@ -1,4 +1,5 @@
 clear all; close all;
+down_factor = 8;
 c = pi;													%感光源尺寸
 freq_bound = pi;										%初步计算的频率范围为-freq_bound:freq_bound
 N = 512;												%频域上一个方向总的采样点数				
@@ -8,13 +9,20 @@ H = abs(get_MTF( 0, 0.14, 11/180*pi, 2.35*c, c, 0.3, freq_bound, N));%光学系�
 save('H.mat','H');
 figure;[C,h] = contour(linspace(-pi,pi,N),linspace(-pi,pi,N),H,[0.8,0.6,0.4,0.2,0.1,0.01,0,-0.1,-0.2,-0.01,-0.001]);clabel(C,h);title('ccd3');
 %==========================================================================
-theta_alias = 0;
-theta_noise = 1000;
+theta_alias = 0.4;
+theta_noise = 5;
 sigma = 0.5;
 F = get_F(freq_bound,N);
 HF = H.*F;
-HF_alias = HF(1:256,1:256) + HF(1:256,257:512) + HF(257:512,1:256) + HF(257:512,257:512);
-HF_alias = [HF_alias,HF_alias;HF_alias,HF_alias] - HF;  
+HF_alias = zeros(N/down_factor);
+for ii = 1:N/down_factor:N
+	for jj = 1:N/down_factor:N
+	HF_alias = HF_alias + HF(ii:ii+N/down_factor-1,jj:jj+N/down_factor-1);
+	end
+end
+HF_alias = repmat(HF_alias,down_factor,down_factor) - HF;
+%HF_alias = HF(1:256,1:256) + HF(1:256,257:512) + HF(257:512,1:256) + HF(257:512,257:512);
+%HF_alias = [HF_alias,HF_alias;HF_alias,HF_alias] - HF;  
 a = HF_alias./HF;
 b = sigma./HF;
 save('b.mat','b');
