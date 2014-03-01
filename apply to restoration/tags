@@ -4,8 +4,7 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.5	//
-Move_H	Move_H.m	/^function [ H_move ] = Move_H( H, i, j)$/;"	f
 get_F	get_F.m	/^function F = get_F(freq_bound,N)$/;"	f
 get_MTF	get_MTF.m	/^function [H] = get_MTF( beta_1, beta_2, theta, d, c, alpha, freq_bound, N)$/;"	f
-get_alias	get_alias.m	/^function alias = get_alias( HF,i_shift,j_shift )$/;"	f
+get_adapted_cell	get_adapted_cell.m	/^function [a,b,D_opt] = get_adapted_cell(down_factor,N,H,F,sigma,theta_alias,theta_noise)$/;"	f
 plot_spectrum	plot_spectrum.m	/^function plot_spectrum(image_fft,description)$/;"	f
