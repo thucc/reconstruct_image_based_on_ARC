@@ -1,7 +1,7 @@
 clear all;close all;
 down_factor 		= 2;									%降采样倍数
 N 					= 512;									%频域一个方向上的采样点数目
-origin_hr_image 	= imread('Build512B.bmp');				%原始高分辨图像
+origin_hr_image 	= imread('./images/Build512B.bmp');				%原始高分辨图像
 sigma 				= 0.5;									%噪声标准差
 
 c					= pi/20;								%感光源尺寸

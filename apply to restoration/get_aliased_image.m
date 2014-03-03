@@ -24,4 +24,4 @@ noise 						= randn(N/down_factor)*sigma;
 image_with_noise 			= image_down_sample + noise;
 figure;imshow(uint8(image_with_noise));title('image with nose')
 
-imwrite(uint8(image_with_noise),'image_to_reconstruct.bmp','bmp');
+imwrite(uint8(image_with_noise),'./images/image_to_reconstruct.bmp','bmp');

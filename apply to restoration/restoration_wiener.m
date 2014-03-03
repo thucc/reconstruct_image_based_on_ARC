@@ -1,7 +1,7 @@
 clear all;close all;
 params 						= load('params.mat');
 down_factor 				= params.down_factor;
-origin_image 				= imread('image_to_reconstruct.bmp');
+origin_image 				= imread('./images/image_to_reconstruct.bmp');
 origin_spec 				= fft2(origin_image);
 aliased_spec 				= repmat(origin_spec,down_factor,down_factor);
 %======================不经过自适应倒易晶包，直接在频谱外补零，傅里叶逆变换得到恢复图像==================
