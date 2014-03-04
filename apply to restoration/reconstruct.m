@@ -27,6 +27,9 @@ PSNR						=zeros(6,1);
 H 							= params.H;
 b 							= params.b;
 K 							= H./(H.^2.*(1+b.^2));
+%Sx							= (abs(params.F)).^2;
+%Su							= (params.sigma)^2;
+%K 							= H.*Sx./(H.^2.*Sx+Su);
 [SNR(3),PSNR(3)]			= wiener_filter(spec_after_Dvor,K, ... 
 											origin_hr_image,origin_image,'reconstructed image with wiener filter on D\_vor');
 [SNR(4),PSNR(4)]			= wiener_filter(spec_after_Dopt,K, ... 
@@ -34,6 +37,7 @@ K 							= H./(H.^2.*(1+b.^2));
 %======================考虑混叠的维纳滤波================================================================
 a 							= params.a;
 K 							= H./(H.^2.*(1+a.^2+b.^2));
+%K							= H.*Sx./(H.^2.*Sx+Su+(params.HF_alias).^2);
 [SNR(5),PSNR(5)]			= wiener_filter(spec_after_Dvor,K, ... 
 											origin_hr_image,origin_image,'reconstructed image with wiener filter(consider alias) on D\_vor');
 [SNR(6),PSNR(6)]			= wiener_filter(spec_after_Dopt,K, ... 

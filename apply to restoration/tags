@@ -4,7 +4,9 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.5	//
+cal_SNR_PSNR	cal_SNR_PSNR.m	/^function [SNR,PSNR] = cal_SNR_PSNR(hr_image,lr_image)$/;"	f
 get_F	get_F.m	/^function F = get_F(freq_bound,N)$/;"	f
 get_MTF	get_MTF.m	/^function [H] = get_MTF( beta_1, beta_2, theta, d, c, alpha, freq_bound, N)$/;"	f
-get_adapted_cell	get_adapted_cell.m	/^function [a,b,D_opt] = get_adapted_cell(down_factor,N,H,F,sigma,theta_alias,theta_noise)$/;"	f
+get_adapted_cell	get_adapted_cell.m	/^function [a,b,D_opt,HF_alias] = get_adapted_cell(down_factor,N,H,F,sigma,theta_alias,theta_noise)$/;"	f
 plot_spectrum	plot_spectrum.m	/^function plot_spectrum(image_fft,description)$/;"	f
+wiener_filter	wiener_filter.m	/^function [SNR,PSNR,res_image] = wiener_filter(spec,K,origin_hr_image,origin_image,description)$/;"	f
