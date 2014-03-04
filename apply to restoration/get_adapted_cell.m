@@ -10,9 +10,11 @@ function [a,b,D_opt] = get_adapted_cell(down_factor,N,H,F,sigma,theta_alias,thet
  	HF_alias = repmat(HF_alias,down_factor,down_factor) - HF;
  	a = HF_alias./HF;
  	b = sigma./HF;
- 	D_opt_alias = 1 - dither(a - theta_alias);
- 	D_opt_noise = 1 - dither(b - theta_noise);
+ 	D_opt_alias = 1 - double((a - theta_alias) > theta_alias);
+ 	D_opt_noise = 1 - double((b - theta_noise) > theta_noise);
  	D_opt = D_opt_alias.*D_opt_noise;
- 	figure;imshow(D_opt);title('D\_opt')
+ 	figure;subplot(2,2,1);imshow(a);title('relative alias');
+		   subplot(2,2,2);imshow(b);title('relative noise');
+		   subplot(2,2,3);imshow(D_opt);title('D\_opt')
 
 end
