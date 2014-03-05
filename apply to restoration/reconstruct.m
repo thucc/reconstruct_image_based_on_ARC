@@ -26,7 +26,8 @@ PSNR						=zeros(6,1);
 %%======================维纳滤波==========================================================================
 H 							= params.H;
 b 							= params.b;
-K 							= H./(H.^2.*(1+b.^2));
+%K 							= H./(H.^2.*(1+b.^2));
+K 							= H./(H.^2+0.0001);
 %Sx							= (abs(params.F)).^2;
 %Su							= (params.sigma)^2;
 %K 							= H.*Sx./(H.^2.*Sx+Su);
@@ -38,6 +39,7 @@ K 							= H./(H.^2.*(1+b.^2));
 a 							= params.a;
 K 							= H./(H.^2.*(1+a.^2+b.^2));
 %K							= H.*Sx./(H.^2.*Sx+Su+(params.HF_alias).^2);
+K 							= H./(H.^2.*(1+a.^2)+0.0001);
 [SNR(5),PSNR(5)]			= wiener_filter(spec_after_Dvor,K, ... 
 											origin_hr_image,origin_image,'reconstructed image with wiener filter(consider alias) on D\_vor');
 [SNR(6),PSNR(6)]			= wiener_filter(spec_after_Dopt,K, ... 

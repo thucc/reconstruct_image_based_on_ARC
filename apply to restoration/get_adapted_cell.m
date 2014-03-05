@@ -12,6 +12,7 @@ function [a,b,D_opt,HF_alias] = get_adapted_cell(down_factor,N,H,F,sigma,theta_a
 	HF 		 = abs(HF);
  	a = HF_alias./HF;
  	b = sigma./HF;
+	b = abs(fftshift(fft2(randn(N)*sigma)))./HF;
  	D_opt_alias = 1 - double((a - theta_alias) > 0);
  	D_opt_noise = 1 - double((b - theta_noise) > 0);
  	D_opt = D_opt_alias.*D_opt_noise;
