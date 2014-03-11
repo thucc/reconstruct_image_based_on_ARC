@@ -5,7 +5,8 @@ function [SNR,PSNR,res_image] = wiener_filter(spec,K,origin_hr_image,origin_imag
 %%%			origin_image		:		降采样且加噪的图像
 
 	res_image 					= abs(ifft2(ifftshift(spec.*K)));
-	figure;imshow(res_image,[]);title(description)
+	res_image					= (res_image-min(min(res_image)))/(max(max(res_image))-min(min(res_image)));
+	figure;imshow(res_image);title(description)
 	[SNR,PSNR]					= cal_SNR_PSNR(origin_hr_image,res_image);
 end
 
