@@ -28,10 +28,11 @@ function hr_image = get_hr_image(N,bound)
 %							N：采样点数目														%
 %							bound:图像范围														%
 %===============================================================================================%
-	x1		= linspace(-bound,bound,N)';			
+	x1		= linspace(1,bound,N)';			
 	x1		= repmat(x1,1,N);				%水平方向坐标
 	x2		= x1';							%垂直方向坐标
-	hr_image= uint8(127.5 + 127.5 * cos((1440./pi) ./ (1 + 512./sqrt(8 * (x1.^2 + x2.^2)))));
+	O		= (bound-1)/2;
+	hr_image= uint8(127.5 + 127.5 * cos((1440./pi) ./ (1 + 512./sqrt(8 * ((x1-O).^2 + (x2-O).^2)))));
 end
 
 function sampling_image = sample(input_image)

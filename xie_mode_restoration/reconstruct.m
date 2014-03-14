@@ -1,16 +1,16 @@
 clear all;close all;
 
 N						= 400;
-bound					= 127;
-p						= 2*bound/N;
+bound					= 256;
+p						= bound/N;
 H						= ones(N);
-%H 						= get_MTF( 0, 0.14, -11/180*pi, 2.35*sqrt(5)*(p), sqrt(5)*(p), 0.3, pi/(p), N);
+H 						= get_MTF( 0, 0.14, -11/180*pi, 2.35*sqrt(5)*(p), sqrt(5)*(p), 0.3, pi/(p), N);
 sigma					= 0.05;
 sampling_image			= xie_mode_sampling(N,bound,H,sigma);
 figure;imshow(sampling_image);title('sampled image(27 degree)')
 
 theta_alias				= 4;
-theta_noise				= 3;
+theta_noise				= 30;
 F						= get_F(pi/p,N);
 [Dopt,a,b]				= get_xie_mode_Dopt(H.*F,sigma,theta_noise,theta_alias);
 F_alias					= fftshift(fft2(sampling_image));
