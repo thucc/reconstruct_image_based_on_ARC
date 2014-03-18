@@ -42,4 +42,4 @@ else
 	    end
 	end
 end
-I = im2gray(I);
+I = mat2gray(I);
