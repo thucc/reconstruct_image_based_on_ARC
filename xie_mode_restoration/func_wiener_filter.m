@@ -2,10 +2,10 @@ function [SNR,PSNR,res_image] = wiener_filter(spec,K,description)
 %%%			spec				:   	待恢复图像的频谱
 %%%			K					:		维纳滤波器的系统函数
 
-	res_image 					= abs(ifft2(ifftshift(spec.*K)));
-	res_image					= (res_image-min(min(res_image)))/(max(max(res_image))-min(min(res_image)));
+	res_image 					= mat2gray(abs(ifft2(ifftshift(spec.*K))));
 	figure;imshow(res_image);title(description)
-	[SNR,PSNR]					= cal_SNR_PSNR(res_image);
+	%[SNR,PSNR]					= cal_SNR_PSNR(res_image);
+	SNR=0;PSNR=0;
 end
 
  
