@@ -17,7 +17,7 @@ F_R	 				= abs(fftshift(fft2(origin_hr_image)));				%真实频谱
 F_RA				= sum(sum(F_R.^2));									%真实频谱总能量
 image_to_reconstruct= im2double(imread('./images/image_to_reconstruct.bmp')); %模拟的低分辨率图像
 F_D					= abs(fftshift(fft2(image_to_reconstruct,N,N)));	%模拟的低分辨率图像的频谱		
-F					= F_R;
+F					= F_D;
 theta_alias 		= 1.3;
 theta_noise 		= 3;
 

@@ -2,10 +2,10 @@ function func_quad_sample(bound,N)
 %=======================================================================================================%
 %                             积分采样																	%
 %=======================================================================================================%
-	image_27		= quad_sample(bound,N,0);
-	imwrite(image_27,'./images/quad_sample_27.bmp','bmp');
-	image_45		= quad_sample(bound,round(N*sqrt(2/5)),1);
-	imwrite(image_45,'./images/quad_sample_45.bmp','bmp');
+%	image_27		= quad_sample(bound,N,0);
+%	imwrite(image_27,'./images/quad_sample_27.bmp','bmp');
+%	image_45		= quad_sample(bound,round(N*sqrt(2/5)),1);
+%	imwrite(image_45,'./images/quad_sample_45.bmp','bmp');
 	image_reg		= quad_sample(bound,round(N*sqrt(1/5)),2);
 	imwrite(image_reg,'./images/quad_sample_reg.bmp','bmp');
 end
