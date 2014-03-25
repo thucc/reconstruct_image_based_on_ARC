@@ -15,12 +15,15 @@ function func_bilinear_inter(N,ang)
 
 	K							= load('data_K.mat');
 	sample_inter_spec			= fftshift(fft2(sample_interpolation));
-	res_image1 					= abs(ifft2(ifftshift(sample_inter_spec.*K.K1)));
-	res_image2 					= abs(ifft2(ifftshift(sample_inter_spec.*K.K2)));
+	[PSNR(1),mssim(1),res_image1] = func_wiener_filter(sample_inter_spec,1,[num2str(ang),'_interpolation'],ang);
+	[PSNR(2),mssim(2),res_image2] = func_wiener_filter(sample_inter_spec,K.K1,[num2str(ang),'_interpolation_wiener_filter'],ang);
+	[PSNR(3),mssim(3),res_image3] = func_wiener_filter(sample_inter_spec,K.K2,[num2str(ang),'_interpolation_wiener_filter_consider_alias'],ang);
 
+	PSNR
+	mssim
 	%figure;imshow(sample_interpolation);title([num2str(ang),' sample interpolation']);
 	imwrite(sample_interpolation,['./images/',num2str(ang),'_sample_interpolation.bmp']);
 
-	imwrite(res_image1,['./images/',num2str(ang),'_interpolation_wiener_filter.bmp']);
-	imwrite(res_image2,['./images/',num2str(ang),'_interpolation_wiener_filter_consider_alias.bmp']);
+	imwrite(res_image2,['./images/',num2str(ang),'_interpolation_wiener_filter.bmp']);
+	imwrite(res_image3,['./images/',num2str(ang),'_interpolation_wiener_filter_consider_alias.bmp']);
 end
