@@ -18,18 +18,17 @@ function H = func_get_MTF( choice, beta_1, beta_2, theta, d, c, alpha, freq_boun
 		%==============================initialization==============================
 		xi = linspace(-freq_bound,freq_bound,N);
 		eta = linspace(freq_bound,-freq_bound,N);
+		[Xi,Eta]	= meshgrid(xi,eta);
 		%=================================get MTF resulted from sensor=============
-		H_sen_1 = sinc(eta*c/2/pi)'*sinc(xi*c/2/pi);
-		H_sen_2 = exp(-beta_2*c*abs(eta))'*exp(-beta_1*c*abs(xi));
+		H_sen_1 = sinc(Eta*c/2/pi).*sinc(Xi*c/2/pi);
+		H_sen_2 = exp(-beta_2*c*abs(Eta)).*exp(-beta_1*c*abs(Xi));
 		H_sen = H_sen_1.*H_sen_2;
 		%=================================get MTF resulted from moving=============
-		temp = kron((eta*sin(theta))',ones(1,N)) + kron(xi*cos(theta),ones(N,1));
-		H_mov = sinc(temp*d/2/pi);
+		H_mov = sinc((Eta*sin(theta)+Xi*cos(theta))*d/2/pi);
 		%=================================get MTF resulted from optical============
-		H_opt = exp(-alpha*c*sqrt(kron((eta.^2)',ones(1,N)) + kron(xi.^2,ones(N,1))));
+		H_opt = exp(-alpha*c*sqrt(Eta.^2 + Xi.^2));
 		%=================================get final MTF============================
 		H = H_sen .* H_mov .* H_opt;
-
 		plot_H(xi,eta,H,ang,freq_bound,N);
 	end
 end

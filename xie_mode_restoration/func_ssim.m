@@ -41,4 +41,5 @@ function re = ssim(x,y,K)
 	S			= (sigma_xy+c3)/(sqrt(sigma2_x*sigma2_y)+c3);
 
 	re			= L*C*S;
+%	re			= S;
 end

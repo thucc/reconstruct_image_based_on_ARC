@@ -1,4 +1,4 @@
-function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image)
+function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path)
 %===============================================================================================%
 %							斜模式采样函数														%
 %							N：采样点数目														%
@@ -6,24 +6,24 @@ function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choic
 %							H:系统传输函数														%
 %							ang:斜模式角度，27or45												%
 %							choice_image:0=》模拟图像降采样重建，1=》真实场景图像降采样重建		%
+%							image_path:choice_image为1时表示真实场景图像的存储位置				%
 %===============================================================================================%
-hr_image				= mat2gray(get_hr_image(N,bound,choice_image));
+hr_image				= mat2gray(get_hr_image(N,bound,choice_image,image_path));
 sigma					= mean(mean(hr_image.^2))/(sqrt(10^(SNR/10)));
 hr_image_S				= fftshift(fft2(hr_image));
 hr_image_after_MTF_S	= hr_image_S.*H;
 hr_image_after_MTF		= mat2gray(abs(ifft2(ifftshift(hr_image_after_MTF_S))));
-sampling_image			= mat2gray(hr_image_after_MTF + randn(N)*sigma);
-sampling_image			= sample(sampling_image,ang);
+sampling_image_1		= mat2gray(hr_image_after_MTF + randn(N)*sigma);
+sampling_image			= sample(sampling_image_1,ang);
 
-%figure;imshow(hr_image);title([num2str(ang),' high resolution image']);
-imwrite(hr_image,['./images/',num2str(ang),'_hr_image.bmp']);
-%figure;imshow(log10(1+abs(hr_image_S)),[]);title([num2str(ang),' high resolution image spectrum']);
-imwrite(mat2gray(log10(1+abs(hr_image_S))),['./images/',num2str(ang),'_hr_image_Spectrum.bmp']);
-%figure;imshow(log10(1+abs(hr_image_after_MTF_S)),[]);title([num2str(ang),' high resolution image after MTF spectrum']);
-imwrite(mat2gray(log10(1+abs(hr_image_after_MTF_S))),['./images/',num2str(ang),'_hr_image_after_MTF_Spectrum.bmp']);
+imwrite(hr_image,['./images/',num2str(ang),'_img','_hr.png']);
+imwrite(sampling_image_1,['./images/',num2str(ang),'_img','_hr_after_MTF_and_noise.png']);
+imwrite(mat2gray(log10(1+abs(hr_image_S))),['./images/',num2str(ang),'_spec','_hr.png']);
+imwrite(mat2gray(log10(1+abs(fftshift(fft2(sampling_image_1))))),['./images/',num2str(ang),'_spec','_hr_after_MTF_and_noise.png']);
+imwrite(mat2gray(log10(1+abs(hr_image_after_MTF_S))),['./images/',num2str(ang),'_spec','_hr_after_MTF.png']);
 end
 
-function hr_image = get_hr_image(N,bound,choice_image)
+function hr_image = get_hr_image(N,bound,choice_image,image_path)
 %===============================================================================================%
 %       					获取高分辨率图像，近似认为是原始连续图像							%
 %							N：采样点数目														%
@@ -38,7 +38,7 @@ if choice_image == 0
 %	O		= 0;
 	hr_image= uint8(127.5 + 127.5 * cos((1440./pi) ./ (1 + 512./sqrt(8 * ((x1-O).^2 + (x2-O).^2)))));
 elseif choice_image == 1
-	hr_image= imread('./images/real_image/test.bmp');
+	hr_image= imread(image_path);
 end
 end
 
