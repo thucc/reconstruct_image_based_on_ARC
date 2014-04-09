@@ -15,7 +15,7 @@ function index = func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,thet
 %				index:复原评价指标，2行，第一行为PSNR，第二行为ssim											%
 %===========================================================================================================%
 	p							= bound/N;							%采样点间距
-	H 							= func_get_MTF( choice_H, 0, 0.04, ang/180*pi, 2.5*sqrt(5)*(p), sqrt(5)*(p), 0.1, pi/(p), N, ang);
+	H 							= func_get_MTF( choice_H, 0.14, 0, ang/180*pi, 0*p, sqrt(5)*(p), 0.3, 1*pi/(p), N, ang);
 	[sample_image,sigma]		= func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path);
 	sample_spec					= fftshift(fft2(sample_image));
 	

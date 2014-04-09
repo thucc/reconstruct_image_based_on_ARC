@@ -19,12 +19,14 @@ function H = func_get_MTF( choice, beta_1, beta_2, theta, d, c, alpha, freq_boun
 		xi = linspace(-freq_bound,freq_bound,N);
 		eta = linspace(freq_bound,-freq_bound,N);
 		[Xi,Eta]	= meshgrid(xi,eta);
+		Xi_rotate	= cos(-theta)*Xi + sin(-theta)*Eta;
+		Eta_rotate	= -sin(-theta)*Xi + cos(-theta)*Eta;
 		%=================================get MTF resulted from sensor=============
-		H_sen_1 = sinc(Eta*c/2/pi).*sinc(Xi*c/2/pi);
-		H_sen_2 = exp(-beta_2*c*abs(Eta)).*exp(-beta_1*c*abs(Xi));
+		H_sen_1 = sinc(Eta_rotate*c/2/pi).*sinc(Xi_rotate*c/2/pi);
+		H_sen_2 = exp(-beta_2*c*abs(Eta_rotate)).*exp(-beta_1*c*abs(Xi_rotate));
 		H_sen = H_sen_1.*H_sen_2;
 		%=================================get MTF resulted from moving=============
-		H_mov = sinc((Eta*sin(theta)+Xi*cos(theta))*d/2/pi);
+		H_mov = sinc(Eta*d/2/pi);
 		%=================================get MTF resulted from optical============
 		H_opt = exp(-alpha*c*sqrt(Eta.^2 + Xi.^2));
 		%=================================get final MTF============================
@@ -36,7 +38,7 @@ end
 function plot_H(xi,eta,H,ang,freq_bound,N)
 	[Xi,Eta]	= meshgrid(xi,eta);
 	figure;	subplot(1,2,1);mesh(Xi,Eta,H);
-			subplot(1,2,2);[c,h] = contour(Xi,Eta,H);clabel(c,h);hold on;axis equal
+			subplot(1,2,2);[c,h] = contour(Xi,Eta,H,[1 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0 -0.1 -0.01 -0.001]);clabel(c,h);hold on;axis equal
 	if ang == 27
 	x	    	= linspace(-freq_bound,freq_bound,N);
 	y1			= zeros(1,N);
