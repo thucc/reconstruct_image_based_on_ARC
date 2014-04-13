@@ -1,3 +1,13 @@
+function index = func_cal_index(res_image,hr_image)
+	index = [func_PSNR(res_image,hr_image);func_ssim(res_image,hr_image)];
+end
+
+function PSNR	= func_PSNR(res_image,hr_image)
+	[M,N]				= size(hr_image);
+	noise_power			= sum(sum((hr_image-res_image).^2));
+	PSNR				= 10*log10(255^2*M*N/noise_power);
+end
+
 function mssim	= func_ssim(image1,image2,K)
 %input: image1	=>	the first image to be compared
 %		image2	=>	the second image to be compared
@@ -6,23 +16,22 @@ function mssim	= func_ssim(image1,image2,K)
 %       If one of the images being compared is regarded as perfect quality, then mssim can be considered as the quality measure of the other image.
 %       If image1 = image2, then mssim = 1.
 
-if (nargin < 2 || nargin > 3)
-	mssim = -Inf
-	return
-end
-if (nargin == 2)
-	K		= [0.01,0.03];
-end
-[M,N] 	= size(image1);
-len		= 11;
-mssim	= 0;
-for ii = 1+len:len:M
-	for jj = 1+len:len:N
-		mssim = mssim + ssim(image1(ii-len:ii,jj-len:jj),image2(ii-len:ii,jj-len:jj),K);
+	if (nargin < 2 || nargin > 3)
+		mssim = -Inf
+		return
 	end
-end
-mssim = mssim/(length(1+len:len:M)*length(1+len:len:N));
-
+	if (nargin == 2)
+		K		= [0.01,0.03];
+	end
+	[M,N] 	= size(image1);
+	len		= 11;
+	mssim	= 0;
+	for ii = 1+len:len:M
+		for jj = 1+len:len:N
+			mssim = mssim + ssim(image1(ii-len:ii,jj-len:jj),image2(ii-len:ii,jj-len:jj),K);
+		end
+	end
+	mssim = mssim/(length(1+len:len:M)*length(1+len:len:N));
 end
 
 function re = ssim(x,y,K)
@@ -41,5 +50,4 @@ function re = ssim(x,y,K)
 	S			= (sigma_xy+c3)/(sqrt(sigma2_x*sigma2_y)+c3);
 
 	re			= L*C*S;
-%	re			= S;
 end
