@@ -13,13 +13,13 @@ function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise
 %				image_path:choice_image为1时表示真实场景图像的存储位置										%
 %===========================================================================================================%
 	p							= bound/N;							%采样点间距
-	H 							= func_get_MTF( choice_H, 0.14, 0, ang/180*pi, 0*p, sqrt(5)*(p), 0.3, 1*pi/(p), N, ang);
-	F							= func_get_F(choice_F, pi/p,N);
+	H 							= func_get_MTF( choice_H, 0.14, 0, ang/180*pi, 5.25*p, sqrt(5)*(p), 0.1, 1*pi/(p), N, ang);
 	[sample_image,sigma]		= func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path);
 	sample_spec					= fftshift(fft2(sample_image));
 	
 	Dvor						= func_get_xie_mode_Dvor(N,ang);
 	spec_on_Dvor				= sample_spec.*Dvor;
+	F							= func_get_F(choice_F, pi/p,N);
 	[Dopt,a,b]					= func_get_xie_mode_Dopt(H.*F,sigma,theta_noise,theta_alias,ang);
 	spec_on_Dopt				= sample_spec.*Dopt;
 
@@ -34,7 +34,12 @@ function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise
 	res_image5 = func_wiener_filter(spec_on_Dopt,K2,avg_sample_image);
 	res_image6 = func_wiener_filter(spec_on_Dvor,K2,avg_sample_image);
 	
-	opts.maxit					= 100;
+	opts.maxit					= 50;
+    opts.tol   					= 5^10^(-5);
+    opts.bmax  					= 2^20;
+    opts.bmin  					= 1;
+    opts.IncreaseRate			= 2;
+    opts.disp  					= 0;
 	[res_image7,iter] 			= func_TV(ifftshift(H),res_image1,10000000,2,opts,ifftshift(Dopt));
 	[res_image8,iter] 			= func_TV(ifftshift(H),res_image2,10000000,2,opts,ifftshift(Dvor));
 

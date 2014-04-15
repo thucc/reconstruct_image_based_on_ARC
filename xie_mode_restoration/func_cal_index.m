@@ -5,7 +5,7 @@ end
 function PSNR	= func_PSNR(res_image,hr_image)
 	[M,N]				= size(hr_image);
 	noise_power			= sum(sum((hr_image-res_image).^2));
-	PSNR				= 10*log10(255^2*M*N/noise_power);
+	PSNR				= 10*log10(1^2*M*N/noise_power);
 end
 
 function mssim	= func_ssim(image1,image2,K)
@@ -28,7 +28,7 @@ function mssim	= func_ssim(image1,image2,K)
 	mssim	= 0;
 	for ii = 1+len:len:M
 		for jj = 1+len:len:N
-			mssim = mssim + ssim(image1(ii-len:ii,jj-len:jj),image2(ii-len:ii,jj-len:jj),K);
+			mssim = mssim + ssim(image1(ii-len:ii-1,jj-len:jj-1),image2(ii-len:ii-1,jj-len:jj-1),K);
 		end
 	end
 	mssim = mssim/(length(1+len:len:M)*length(1+len:len:N));

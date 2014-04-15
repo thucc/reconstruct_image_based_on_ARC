@@ -4,7 +4,7 @@ choice_F					= 0;								%0=》统计模型；1=》27度斜模式采样真实频
 choice_image				= 1;								%0=>对模拟生成图像降采样，1=》对现实场景图像降采样
 image_path					= './images/real_image/new_test4.bmp';
 N							= 180;								%采样点数目
-bound						= 150;								%采样的空间范围
+bound						= 180;								%采样的空间范围
 if choice_image == 1
 	N		= min(size(imread(image_path)));
 end
