@@ -11,7 +11,8 @@ end
 SNR							= 48;								%信噪比，db为单位
 theta_alias					= 0.2;
 theta_noise					= 5;
-
-func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise,27,choice_image,image_path)
-func_bilinear_inter(N,27);
-index = func_get_all_index(27)
+ang							= 27;
+rec_or_hex_27				= 'hex';
+func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise,ang,choice_image,image_path,rec_or_hex_27)
+func_bilinear_inter(N,ang);
+index = func_get_all_index(ang)

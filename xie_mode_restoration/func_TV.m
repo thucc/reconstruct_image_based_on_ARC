@@ -1,7 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [U,iter] = func_TV(H,Bn,mu,TVtype,opts,D)
-%
-% A fast algorithm for solving the TVL2 model:
+% % A fast algorithm for solving the TVL2 model:
 %    min TV(u) + 0.5*mu*||H*U - Bn||_2^2.
 % where H is a point spread function and H*U is 
 % a convolution of U.
@@ -70,7 +69,7 @@ while beta <= beta_max; %%% Outer Iterations
         Up = U;
         Nomin2 = conjoDx.*fft2(Wx) + conjoDy.*fft2(Wy);
         FU = (Nomin1 + gamma*Nomin2)./Denom.*D;
-        U = abs(ifft2(FU)); % compute new U
+        U = real(ifft2(FU)); % compute new U
 
         % updating tolerance
         crit1 = norm(U-Up,'fro')/norm(U,'fro');

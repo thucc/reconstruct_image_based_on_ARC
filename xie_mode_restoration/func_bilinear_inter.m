@@ -15,6 +15,6 @@ function func_bilinear_inter(N,ang)
 	sample_interpolation		= mat2gray(griddata(x,y,z,X,Y,method));
 	sample_inter_spec			= fftshift(fft2(sample_interpolation));
 
-	imwrite(mat2gray(log10(1+abs(sample_inter_spec))),['./images/',num2str(ang),'_spec','_interpolation.png']);
+%	imwrite(mat2gray(log10(1+abs(sample_inter_spec))),['./images/',num2str(ang),'_spec','_interpolation.png']);
 	imwrite(sample_interpolation,['./images/',num2str(ang),'_img','_interpolation.png']);
 end

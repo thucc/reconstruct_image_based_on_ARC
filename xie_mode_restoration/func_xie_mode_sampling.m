@@ -1,4 +1,4 @@
-function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path)
+function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path,rec_or_hex_27)
 %===============================================================================================%
 %							斜模式采样函数														%
 %							N：采样点数目														%
@@ -7,6 +7,7 @@ function [sampling_image,sigma] = func_xie_mode_sampling(N,bound,H,SNR,ang,choic
 %							ang:斜模式角度，27or45												%
 %							choice_image:0=》模拟图像降采样重建，1=》真实场景图像降采样重建		%
 %							image_path:choice_image为1时表示真实场景图像的存储位置				%
+%							rec_or_hex_27:27度斜模式采样形成的网格是正方形还是六边形			%
 %===============================================================================================%
 hr_image				= mat2gray(get_hr_image(N,bound,choice_image,image_path));
 sigma					= mean(mean(hr_image.^2))/(sqrt(10^(SNR/10)));
@@ -14,7 +15,7 @@ hr_image_S				= fftshift(fft2(hr_image));
 hr_image_after_MTF_S	= hr_image_S.*H;
 hr_image_after_MTF		= mat2gray(abs(ifft2(ifftshift(hr_image_after_MTF_S))));
 sampling_image_1		= mat2gray(hr_image_after_MTF + randn(N)*sigma);
-sampling_image			= sample(sampling_image_1,ang);
+sampling_image			= sample(sampling_image_1,ang,rec_or_hex_27);
 
 imwrite(hr_image,['./images/',num2str(ang),'_img','_hr.png']);
 imwrite(sampling_image_1,['./images/',num2str(ang),'_img','_hr_after_MTF_and_noise.png']);
@@ -42,17 +43,20 @@ elseif choice_image == 1
 end
 end
 
-function sampling_image = sample(input_image,ang)
+function sampling_image = sample(input_image,ang,rec_or_hex_27)
 %===============================================================================================%
 %							对输入图像进行斜模式采样											%
 %							input_image：输入图像												%
 %							sampling_image：采样图像，没有采样的点补零							%
+%							rec_or_hex_27:27度斜模式采样形成的网格是正方形还是六边形			%
 %===============================================================================================%
 [M,N]					= size(input_image);
 sampling_image			= zeros(M,N);
-if ang == 27
+if ang == 27 && strcmp(rec_or_hex_27 , 'hex')
 	sampling_image(1:4:M,1:2:N) = input_image(1:4:N,1:2:N);
 	sampling_image(3:4:M,2:2:N) = input_image(3:4:M,2:2:N);
+elseif ang == 27 && strcmp(rec_or_hex_27 , 'rec')
+	sampling_image(1:2:M,1:2:N) = input_image(1:2:M,1:2:N);
 elseif ang == 45
 	sampling_image(1:2:M,1:2:N) = input_image(1:2:M,1:2:N);
 end

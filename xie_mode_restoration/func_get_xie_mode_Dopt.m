@@ -1,4 +1,4 @@
-function [D_opt,a,b] = func_get_xie_mode_Dopt(HF,sigma,theta_noise,theta_alias,ang)
+function [D_opt,a,b] = func_get_xie_mode_Dopt(HF,sigma,theta_noise,theta_alias,ang,rec_or_hex_27)
 %===============================================================================================%
 %							获取斜模式采样的最优倒易晶包										%
 %							HF：MTF.*F															%
@@ -6,8 +6,9 @@ function [D_opt,a,b] = func_get_xie_mode_Dopt(HF,sigma,theta_noise,theta_alias,a
 %							theta_noise:噪声阈值，超过该阈值的区域不属于最优倒易晶包			%
 %							theta_alias:混叠阈值，超过该阈值的区域不属于最优倒易晶包			%
 %							ang:斜模式角度，27or45												%
+%							rec_or_hex_27:27度斜模采样网格的形状								%
 %===============================================================================================%
-	aliased_spec	= get_xie_mode_alias(HF,ang);
+	aliased_spec	= get_xie_mode_alias(HF,ang,rec_or_hex_27);
 	N				= size(HF);
 	N				= N(1);
 	a				= abs(aliased_spec - HF)./abs(HF);
@@ -15,18 +16,18 @@ function [D_opt,a,b] = func_get_xie_mode_Dopt(HF,sigma,theta_noise,theta_alias,a
 	D_opt_alias		= double(a < theta_alias);
 	D_opt_noise		= double(b < theta_noise);
 	D_opt			= D_opt_alias.*D_opt_noise;
-	figure;	subplot(3,2,1);imshow(log10(1+a),[]);title([num2str(ang),' relative alias']);
-   			subplot(3,2,2);imshow(log10(1+b),[]);title([num2str(ang),' relative noise']);
+	figure;	subplot(3,2,1);imshow(log10(1+a));title([num2str(ang),' relative alias']);
+   			subplot(3,2,2);imshow(log10(1+b));title([num2str(ang),' relative noise']);
 			subplot(3,2,3);imshow(D_opt_alias,[]);title([num2str(ang),' D opt alias']);
    			subplot(3,2,4);imshow(D_opt_noise,[]);title([num2str(ang),' D opt noise']);
    			subplot(3,2,5);imshow(D_opt,[]);title([num2str(ang),' Dopt']);
 end
-function aliased_spec = get_xie_mode_alias(HF,ang)
+function aliased_spec = get_xie_mode_alias(HF,ang,rec_or_hex_27)
 %===============================================================================================%
 %							获取斜模式采样的混叠谱												%
 %===============================================================================================%
 	[M,N] 			= size(HF);
-	if ang == 27
+	if ang == 27 && strcmp(rec_or_hex_27 , 'hex')
 		A				= HF(1:0.25*M,1:0.5*N);
 		B				= HF(1:0.25*M,0.5*N+1:N);
 		C				= HF(0.25*M+1:0.5*M,1:0.5*N);
@@ -39,6 +40,14 @@ function aliased_spec = get_xie_mode_alias(HF,ang)
 		temp1			= A+D+E+H;
 		temp2			= B+C+F+G;
 		aliased_spec	= repmat([temp1,temp2;temp2,temp1],2,1);
+	elseif ang == 27 && strcmp(rec_or_hex_27 , 'rec')
+	 	HF_alias 		= zeros(N/2);
+	 	for ii = 1:N/2:N
+	 		for jj = 1:N/2:N
+	 		HF_alias = HF_alias + HF(ii:ii+N/2-1,jj:jj+N/2-1);
+	 		end
+	 	end
+	 	aliased_spec	= repmat(HF_alias,2,2);
 	elseif ang == 45
 	 	HF_alias 		= zeros(N/2);
 	 	for ii = 1:N/2:N
