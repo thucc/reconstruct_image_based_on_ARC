@@ -16,11 +16,12 @@ function [D_opt,a,b] = func_get_xie_mode_Dopt(HF,sigma,theta_noise,theta_alias,a
 	D_opt_alias		= double(a < theta_alias);
 	D_opt_noise		= double(b < theta_noise);
 	D_opt			= D_opt_alias.*D_opt_noise;
-	figure;	subplot(3,2,1);imshow(log10(1+a));title([num2str(ang),' relative alias']);
-   			subplot(3,2,2);imshow(log10(1+b));title([num2str(ang),' relative noise']);
+    figure;	subplot(3,2,1);imshow(log10(1+a),[]);title([num2str(ang),' relative alias']);
+   			subplot(3,2,2);imshow(log10(1+b),[]);title([num2str(ang),' relative noise']);
 			subplot(3,2,3);imshow(D_opt_alias,[]);title([num2str(ang),' D opt alias']);
    			subplot(3,2,4);imshow(D_opt_noise,[]);title([num2str(ang),' D opt noise']);
    			subplot(3,2,5);imshow(D_opt,[]);title([num2str(ang),' Dopt']);
+%    saveas(gcf,[num2str(ang),'_alias_noise_Dopt.png'],'png')
 end
 function aliased_spec = get_xie_mode_alias(HF,ang,rec_or_hex_27)
 %===============================================================================================%

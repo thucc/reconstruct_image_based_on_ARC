@@ -1,4 +1,9 @@
 function index = func_cal_index(res_image,hr_image)
+    [h,w] = size(res_image);
+    b_row = 5;
+    b_col = 5;
+    res_image = res_image(b_row+1:h-b_row,b_col+1:w-b_col);
+    hr_image = hr_image(b_row+1:h-b_row,b_col+1:w-b_col);
 	index = [func_PSNR(res_image,hr_image);func_ssim(res_image,hr_image)];
 end
 

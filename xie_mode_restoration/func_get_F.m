@@ -1,4 +1,4 @@
-function F = func_get_F(choice_F,freq_bound,N)
+function F = func_get_F(choice_F,freq_bound,N,sample_spec)
 
 if choice_F	== 0
 	xi  		= linspace(-freq_bound,freq_bound,N)+eps;
@@ -10,5 +10,7 @@ elseif choice_F	== 1
 elseif choice_F == 2
 	hr_image_45	= im2double(imread('./images/45_img_hr.png'));
 	F 			= abs(fftshift(fft2(hr_image_45)));
+elseif choice_F == 3
+    F           = sample_spec.*func_F_morph(sample_spec);
 end
 end

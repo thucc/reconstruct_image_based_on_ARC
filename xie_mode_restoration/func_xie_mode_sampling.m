@@ -19,9 +19,9 @@ sampling_image			= sample(sampling_image_1,ang,rec_or_hex_27);
 
 imwrite(hr_image,['./images/',num2str(ang),'_img','_hr.png']);
 imwrite(sampling_image_1,['./images/',num2str(ang),'_img','_hr_after_MTF_and_noise.png']);
-imwrite(mat2gray(log10(1+abs(hr_image_S))),['./images/',num2str(ang),'_spec','_hr.png']);
-imwrite(mat2gray(log10(1+abs(fftshift(fft2(sampling_image_1))))),['./images/',num2str(ang),'_spec','_hr_after_MTF_and_noise.png']);
-imwrite(mat2gray(log10(1+abs(hr_image_after_MTF_S))),['./images/',num2str(ang),'_spec','_hr_after_MTF.png']);
+imwrite(mat2gray(log(1+abs(hr_image_S))),['./images/',num2str(ang),'_spec','_hr.png']);
+imwrite(mat2gray(log(1+abs(fftshift(fft2(sampling_image_1))))),['./images/',num2str(ang),'_spec','_hr_after_MTF_and_noise.png']);
+imwrite(mat2gray(log(1+abs(hr_image_after_MTF_S))),['./images/',num2str(ang),'_spec','_hr_after_MTF.png']);
 end
 
 function hr_image = get_hr_image(N,bound,choice_image,image_path)

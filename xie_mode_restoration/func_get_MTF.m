@@ -20,8 +20,8 @@ function H = func_get_MTF( choice, beta_1, beta_2, theta, d, c, alpha, freq_boun
 		xi = linspace(-freq_bound,freq_bound,N);
 		eta = linspace(freq_bound,-freq_bound,N);
 		[Xi,Eta]	= meshgrid(xi,eta);
-		Xi_rotate	= cos(-theta)*Xi + sin(-theta)*Eta;
-		Eta_rotate	= -sin(-theta)*Xi + cos(-theta)*Eta;
+		Xi_rotate	= sin(theta)*Xi + cos(theta)*Eta;
+		Eta_rotate	= -cos(theta)*Xi + sin(theta)*Eta;
 		%=================================get MTF resulted from sensor=============
 		H_sen_1 = sinc(Eta_rotate*c/2/pi).*sinc(Xi_rotate*c/2/pi);
 		H_sen_2 = exp(-beta_2*c*abs(Eta_rotate)).*exp(-beta_1*c*abs(Xi_rotate));
@@ -34,14 +34,15 @@ function H = func_get_MTF( choice, beta_1, beta_2, theta, d, c, alpha, freq_boun
 		H_opt = exp(-alpha*c*sqrt(Eta.^2 + Xi.^2));
 		%=================================get final MTF============================
 		H = H_sen .* H_mov .* H_opt;
-		plot_H(xi,eta,H,ang,freq_bound,N,rec_or_hex_27);
+%		plot_H(xi,eta,H,ang,freq_bound,N,rec_or_hex_27);
 	end
 end
 
 function plot_H(xi,eta,H,ang,freq_bound,N,rec_or_hex_27)
 	[Xi,Eta]	= meshgrid(xi,eta);
-	figure;	subplot(1,2,1);mesh(Xi,Eta,H);
-			subplot(1,2,2);[c,h] = contour(Xi,Eta,H,[1 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0 -0.1 -0.01 -0.001]);clabel(c,h);hold on;axis equal
+%	figure;	subplot(1,2,1);mesh(Xi,Eta,H);
+%			subplot(1,2,2);[c,h] = contour(Xi,Eta,H,[1 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0 -0.1 -0.01 -0.001]);clabel(c,h);hold on;axis equal
+    [c,h] = contour(Xi,Eta,H,[1 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0 -0.1 -0.01 -0.001]);clabel(c,h);hold on;axis equal;axis([-freq_bound freq_bound -freq_bound freq_bound])
 	if ang == 27 && strcmp(rec_or_hex_27 , 'hex')
 	x	    	= linspace(-freq_bound,freq_bound,N);
 	y1			= zeros(1,N);
@@ -72,15 +73,18 @@ function plot_H(xi,eta,H,ang,freq_bound,N,rec_or_hex_27)
 	plot(x,y2,'--b');
 	plot(x,y3,'--b');
 	plot(x,y4,'--b');
+    saveas(gcf,'27_MTF.png','png')
 	elseif ang == 27 && strcmp(rec_or_hex_27 , 'rec')
 		plot(xi(floor(N/4)+1),eta,'--');
 		plot(xi(floor(N/4)+N/2),eta,'--');
 		plot(xi,eta(floor(N/4)+1),'--');
 		plot(xi,eta(floor(N/4)+N/2),'--');
+    saveas(gcf,'27_MTF.png','png')
 	elseif ang == 45
-		plot(xi(floor(N/4)+1),eta,'--');
-		plot(xi(floor(N/4)+N/2),eta,'--');
-		plot(xi,eta(floor(N/4)+1),'--');
-		plot(xi,eta(floor(N/4)+N/2),'--');
+		plot(xi(floor(N/4)+1),eta,'--b');
+		plot(xi(floor(N/4)+N/2),eta,'--b');
+		plot(xi,eta(floor(N/4)+1),'--b');
+		plot(xi,eta(floor(N/4)+N/2),'--b');
+    saveas(gcf,'45_MTF.png','png')
 	end		
 end

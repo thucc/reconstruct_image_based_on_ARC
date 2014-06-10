@@ -1,4 +1,4 @@
-function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise,ang,choice_image,image_path,rec_or_hex_27)
+function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise,ang,choice_image,image_path,rec_or_hex_27,beta,alpha)
 %===========================================================================================================%
 %input:																										%
 %				斜模式采样重建函数									        								%
@@ -24,13 +24,13 @@ function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise
 		c = sqrt(2)*p;
 		freq_bound	= 2*pi/p;
 	end
-	H 							= func_get_MTF( choice_H, 0.14, 0, ang/180*pi, 5.25*p, c, 0.3, freq_bound, N, ang,rec_or_hex_27);
+	H 							= func_get_MTF( choice_H, beta, 0, ang/180*pi, 5.25*p, c, alpha, freq_bound, N, ang,rec_or_hex_27);
 	[sample_image,sigma]		= func_xie_mode_sampling(N,bound,H,SNR,ang,choice_image,image_path,rec_or_hex_27);
 	sample_spec					= fftshift(fft2(sample_image));
 	
 	Dvor						= func_get_xie_mode_Dvor(N,ang,rec_or_hex_27);
 	spec_on_Dvor				= sample_spec.*Dvor;
-	F							= func_get_F(choice_F, freq_bound ,N);
+	F							= func_get_F(choice_F, freq_bound ,N,sample_spec);
 	[Dopt,a,b]					= func_get_xie_mode_Dopt(H.*F,sigma,theta_noise,theta_alias,ang,rec_or_hex_27);
 	spec_on_Dopt				= sample_spec.*Dopt;
 
@@ -54,23 +54,35 @@ function  func_reconstruct(N,bound,SNR,choice_H,choice_F,theta_alias,theta_noise
 	[res_image7,iter] 			= func_TV(ifftshift(H),res_image1,10000000,2,opts,ifftshift(Dopt));
 	[res_image8,iter] 			= func_TV(ifftshift(H),res_image2,10000000,2,opts,ifftshift(Dvor));
 
-	figure; subplot(1,2,1);imshow((Dopt-Dvor)>0);title('Dopt include while Dvor doesn''t')
-			subplot(1,2,2);imshow((Dopt-Dvor)<0);title('Dvor include while Dopt doesn''t')
+%	figure; subplot(1,2,1);imshow((Dopt-Dvor)>0);title('Dopt include while Dvor doesn''t')
+%			subplot(1,2,2);imshow((Dopt-Dvor)<0);title('Dvor include while Dopt doesn''t')
+%    saveas(gcf,[num2str(ang),'_Dvor_Dopt.png'],'png')
 
+    
+	imwrite(Dopt,['./images/',num2str(ang),'_Dopt.png']);
+	imwrite(Dvor,['./images/',num2str(ang),'_Dvor.png']);
 	imwrite(sample_image,['./images/',num2str(ang),'_img','_sample.png']);
-	imwrite((log10(1+abs(sample_spec))),['./images/',num2str(ang),'_spec','_sample.png']);
+	imwrite(mat2gray(log10(1+abs(sample_spec))),['./images/',num2str(ang),'_spec','_sample.png']);
 	imwrite(mat2gray(log10(1+abs(spec_on_Dvor))),['./images/',num2str(ang),'_spec','_on_Dvor.png']);
 	imwrite(mat2gray(log10(1+abs(spec_on_Dopt))),['./images/',num2str(ang),'_spec','_on_Dopt.png']);
-	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image3))))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dopt.png']);
-	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image4))))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dvor.png']);
+%	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image3))))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dopt.png']);
+%	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image4))))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dvor.png']);
+	imwrite(log10(1+abs(fftshift(fft2(res_image3)))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dopt.png']);
+	imwrite(log10(1+abs(fftshift(fft2(res_image4)))),['./images/',num2str(ang),'_spec','_wiener_filter_on_Dvor.png']);
 %	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image5))))),['./images/',num2str(ang),'_spec','_wiener_filter_consider_alias_on_Dopt.png']);
 %	imwrite(mat2gray(log10(1+abs(fftshift(fft2(res_image6))))),['./images/',num2str(ang),'_spec','_wiener_filter_consider_alias_on_Dvor.png']);
 	imwrite(res_image1,['./images/',num2str(ang),'_img','_directly_restore_on_Dopt.png']);
 	imwrite(res_image2,['./images/',num2str(ang),'_img','_directly_restore_on_Dvor.png']);
 	imwrite(res_image3,['./images/',num2str(ang),'_img','_wiener_filter_on_Dopt.png']);
 	imwrite(res_image4,['./images/',num2str(ang),'_img','_wiener_filter_on_Dvor.png']);
-%	imwrite(res_image5,['./images/',num2str(ang),'_img','_wiener_filter_consider_alias_on_Dopt.png']);
-%	imwrite(res_image6,['./images/',num2str(ang),'_img','_wiener_filter_consider_alias_on_Dvor.png']);
+	imwrite(res_image5,['./images/',num2str(ang),'_img','_wiener_filter_consider_alias_on_Dopt.png']);
+	imwrite(res_image6,['./images/',num2str(ang),'_img','_wiener_filter_consider_alias_on_Dvor.png']);
 	imwrite(res_image7,['./images/',num2str(ang),'_img','_TV_on_Dopt.png']);
 	imwrite(res_image8,['./images/',num2str(ang),'_img','_TV_on_Dvor.png']);
+    imwrite(res_image3(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_wiener_filter_on_Dopt.png'])
+    imwrite(res_image4(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_wiener_filter_on_Dvor.png'])
+    imwrite(res_image5(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_wiener_filter_consider_alias_on_Dopt.png'])
+    imwrite(res_image6(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_wiener_filter_consider_alias_on_Dvor.png'])
+    imwrite(res_image7(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_TV_on_Dopt.png'])
+    imwrite(res_image8(round(N/4):round(N/4*3),round(N/4):round(N/4*3)),['./images/',num2str(ang),'_img_expand','_TV_on_Dvor.png'])
 end
